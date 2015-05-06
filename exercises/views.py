@@ -9,6 +9,7 @@ from flask import g, request, jsonify
 from exercises import app
 from exercises.errorhandlers import json_success, \
     ErrorCode, AbstractError, DatabaseError, InvalidUsage, ResourceNotFound
+from exercises.helpers import normalize
 
 
 @app.errorhandler(AbstractError)
@@ -65,7 +66,7 @@ def check_answer(id):
 
     :param id: Id of a question
     """
-    answer = request.args.get('answer', None)
+    answer = normalize(request.args.get('answer', None))
     if not id.isnumeric() or int(id) <= 0:
         raise InvalidUsage(
             "id must be an integer greater than 0",
@@ -96,7 +97,8 @@ def check_answer(id):
             error_code=ErrorCode.QuestionNotFound
         )
 
-    answer_correct = True if answer is row[0] else False
+    solution = normalize(row[0])
+
     return json_success({
-        'answerCorrect': answer_correct
+        'answerCorrect': answer == solution
     })
