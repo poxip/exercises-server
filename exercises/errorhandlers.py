@@ -2,18 +2,49 @@
     All error handlers used by API server
 """
 
+from enum import IntEnum
+from flask import jsonify
+
+
+def json_success(data):
+    """Convert dictionary to JSON on successful request"""
+    data['success'] = True
+
+    return jsonify(data)
+
+
+def json_fail(data):
+    """Convert dictionary to JSON on failed request"""
+    data['success'] = False
+
+    return jsonify(data)
+
+
+class ErrorCode(IntEnum):
+    """API server error codes"""
+    UndefinedError = -1
+    # InvalidUsage type
+    WrongId = 10
+    AnswerNotSet = 11
+    # DatabaseError type
+    DatabaseError = 20  # Covers all database errors
+    # ResourceNotFound
+    QuestionNotFound = 30
+
 class AbstractError(Exception):
     """An abstract API error class"""
-    error_code = -1  # Undefined error
 
-    def __init__(self, message, status_code=None, payload=None):
+    def __init__(self, message, error_code=ErrorCode.UndefinedError,
+                 status_code=None, payload=None):
         """Initialize API error instance
         :param str message: Error message
+        :param ErrorCode error_code: API server error code
         :param int status_code: HTTP status code
         :param payload: HTTP payload
         """
         Exception.__init__(self)
         self.message = message
+        self.error_code = error_code
         if status_code is not None:
             self.status_code = status_code
 
@@ -28,7 +59,10 @@ class AbstractError(Exception):
         rv['success'] = False
         rv['message'] = self.message
         rv['error'] = {
-            'name': type(self).__name__,
+            'name': "{0}: {1}".format(
+                type(self).__name__,
+                self.error_code.name
+            ),
             'code': self.error_code
         }
 
@@ -37,21 +71,20 @@ class AbstractError(Exception):
 class InvalidUsage(AbstractError):
     """API usage error"""
     status_code = 400
-    error_code = 10
 
 class DatabaseError(AbstractError):
     """Server Database error"""
     status_code = 500
-    error_code = 11
 
-    def __init__(self, message, db_error, status_code=500, payload=None):
+    def __init__(self, message, db_error,
+                 error_code=None, status_code=500, payload=None):
         """Initialize Database error instance
         :param str message: Error message
         :param sqlite3.Error db_error: SQLite3 error instance
         :param int status_code: HTTP status code
         :param payload: HTTP payload
         """
-        AbstractError.__init__(self, message, status_code, payload)
+        AbstractError.__init__(self, message, error_code, status_code, payload)
         self.db_error = db_error
 
     def to_dict(self):
@@ -65,4 +98,3 @@ class DatabaseError(AbstractError):
 
 class ResourceNotFound(AbstractError):
     status_code = 404
-    error_code = 20
