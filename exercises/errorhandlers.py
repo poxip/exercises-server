@@ -3,6 +3,7 @@
 """
 
 from enum import IntEnum
+
 from flask import jsonify
 
 
@@ -30,6 +31,7 @@ class ErrorCode(IntEnum):
     DatabaseError = 20  # Covers all database errors
     # ResourceNotFound
     QuestionNotFound = 30
+
 
 class AbstractError(Exception):
     """An abstract API error class"""
@@ -68,9 +70,11 @@ class AbstractError(Exception):
 
         return rv
 
+
 class InvalidUsage(AbstractError):
     """API usage error"""
     status_code = 400
+
 
 class DatabaseError(AbstractError):
     """Server Database error"""
@@ -95,6 +99,7 @@ class DatabaseError(AbstractError):
         )
 
         return rv
+
 
 class ResourceNotFound(AbstractError):
     status_code = 404

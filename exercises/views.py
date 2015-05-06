@@ -8,8 +8,6 @@ from exercises import app, g, request
 from exercises.errorhandlers import json_success, \
     ErrorCode, AbstractError, DatabaseError, InvalidUsage, ResourceNotFound
 
-from flask import jsonify
-
 
 @app.errorhandler(AbstractError)
 def handle_api_error(error):
