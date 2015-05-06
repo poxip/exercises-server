@@ -6,7 +6,7 @@ class AbstractAPIError(Exception):
     """An abstract API error class"""
     error_code = -1  # Undefined error
 
-    def __init__(self, message, status_code, payload=None):
+    def __init__(self, message, status_code=None, payload=None):
         """Initialize API error instance
         :param str message: Error message
         :param int status_code: HTTP status code
@@ -37,15 +37,12 @@ class AbstractAPIError(Exception):
 class InvalidAPIUsage(AbstractAPIError):
     """API usage error"""
     status_code = 400
-    error_code = 0
-
-    def __init__(self, message, status_code=400, payload=None):
-        AbstractAPIError.__init__(self, message, status_code, payload)
+    error_code = 10
 
 class DatabaseError(AbstractAPIError):
     """Server Database error"""
     status_code = 500
-    error_code = 1
+    error_code = 11
 
     def __init__(self, message, db_error, status_code=500, payload=None):
         """Initialize Database error instance
@@ -65,3 +62,7 @@ class DatabaseError(AbstractAPIError):
         )
 
         return rv
+
+class ResourceNotFound(AbstractAPIError):
+    status_code = 404
+    error_code = 20
