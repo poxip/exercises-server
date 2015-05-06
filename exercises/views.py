@@ -6,11 +6,11 @@ import sqlite3
 
 from exercises import app, g
 from exercises.errorhandlers \
-    import AbstractAPIError, DatabaseError, InvalidAPIUsage, ResourceNotFound
+    import AbstractError, DatabaseError, InvalidUsage, ResourceNotFound
 
 from flask import jsonify
 
-@app.errorhandler(AbstractAPIError)
+@app.errorhandler(AbstractError)
 def handle_api_error(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
@@ -25,7 +25,7 @@ def question(id):
     :return: question data without solution
     """
     if not id.isnumeric() or int(id) <= 0:
-        raise InvalidAPIUsage("id must be an integer greater than 0")
+        raise InvalidUsage("id must be an integer greater than 0")
 
     try:
         cur = g.db.execute(

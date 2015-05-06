@@ -2,7 +2,7 @@
     All error handlers used by API server
 """
 
-class AbstractAPIError(Exception):
+class AbstractError(Exception):
     """An abstract API error class"""
     error_code = -1  # Undefined error
 
@@ -34,12 +34,12 @@ class AbstractAPIError(Exception):
 
         return rv
 
-class InvalidAPIUsage(AbstractAPIError):
+class InvalidUsage(AbstractError):
     """API usage error"""
     status_code = 400
     error_code = 10
 
-class DatabaseError(AbstractAPIError):
+class DatabaseError(AbstractError):
     """Server Database error"""
     status_code = 500
     error_code = 11
@@ -51,11 +51,11 @@ class DatabaseError(AbstractAPIError):
         :param int status_code: HTTP status code
         :param payload: HTTP payload
         """
-        AbstractAPIError.__init__(self, message, status_code, payload)
+        AbstractError.__init__(self, message, status_code, payload)
         self.db_error = db_error
 
     def to_dict(self):
-        rv = AbstractAPIError.to_dict(self)
+        rv = AbstractError.to_dict(self)
         rv['databaseError'] = "{0}: {1}".format(
             type(self.db_error).__name__,
             self.db_error.args[0]
@@ -63,6 +63,6 @@ class DatabaseError(AbstractAPIError):
 
         return rv
 
-class ResourceNotFound(AbstractAPIError):
+class ResourceNotFound(AbstractError):
     status_code = 404
     error_code = 20
