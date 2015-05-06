@@ -8,16 +8,20 @@ from flask import jsonify
 
 def json_success(data):
     """Convert dictionary to JSON on successful request"""
-    data['success'] = True
+    # Put the "success" key on the top of keys
+    result = {"success": True}
+    result.update(data)
 
-    return jsonify(data)
+    return jsonify(result)
 
 
 def json_fail(data):
     """Convert dictionary to JSON on failed request"""
-    data['success'] = False
+    # Put the "success" key on the top of keys
+    result = {"success": False}
+    result.update(data)
 
-    return jsonify(data)
+    return jsonify(result)
 
 
 class ErrorCode(IntEnum):
