@@ -3,7 +3,6 @@
 """
 
 from enum import IntEnum
-
 from flask import jsonify
 
 

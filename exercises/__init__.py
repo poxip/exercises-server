@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import closing
 
-from flask import Flask, g, request
+from flask import Flask, g
 
 # Create the application
 app = Flask(__name__)

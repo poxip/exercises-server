@@ -4,7 +4,9 @@
 
 import sqlite3
 
-from exercises import app, g, request
+from flask import g, request, jsonify
+
+from exercises import app
 from exercises.errorhandlers import json_success, \
     ErrorCode, AbstractError, DatabaseError, InvalidUsage, ResourceNotFound
 
