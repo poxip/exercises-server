@@ -1,10 +1,14 @@
 import sqlite3
 from contextlib import closing
 
-from flask import Flask, g
+from flask import Flask, g, jsonify
+from flask.ext import restful
+
+from exercises.errorhandlers import AbstractError
 
 # Create the application
 app = Flask(__name__)
+api = restful.Api(app)
 
 # Setup configuration
 if app.config.from_envvar('EXERCISES_CONFIG', silent=True) is not True:
@@ -35,4 +39,11 @@ def teardown_request(exception):
         db.close()
 
 
-import exercises.views
+@app.errorhandler(AbstractError)
+def handle_api_error(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+
+    return response
+
+import exercises.resources

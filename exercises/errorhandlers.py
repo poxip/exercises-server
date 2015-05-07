@@ -3,26 +3,6 @@
 """
 
 from enum import IntEnum
-from flask import jsonify
-
-
-def json_success(data):
-    """Convert dictionary to JSON on successful request"""
-    # Put the "success" key on the top of keys
-    result = {"success": True}
-    result.update(data)
-
-    return jsonify(result)
-
-
-def json_fail(data):
-    """Convert dictionary to JSON on failed request"""
-    # Put the "success" key on the top of keys
-    result = {"success": False}
-    result.update(data)
-
-    return jsonify(result)
-
 
 class ErrorCode(IntEnum):
     """API server error codes"""
@@ -61,7 +41,6 @@ class AbstractError(Exception):
         :return: A dictionary filled with serialized error's data
         """
         rv = dict(self.payload or ())
-        rv['success'] = False
         rv['message'] = self.message
         rv['error'] = {
             'name': "{0}: {1}".format(
