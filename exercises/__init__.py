@@ -9,6 +9,7 @@ from exercises.errorhandlers import AbstractError
 
 # Create the application
 app = Flask(__name__)
+cors = CORS(app)
 api = restful.Api(app)
 
 # Setup configuration
