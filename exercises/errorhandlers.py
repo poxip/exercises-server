@@ -14,6 +14,7 @@ class ErrorCode(IntEnum):
     DatabaseError = 20  # Covers all database errors
     # ResourceNotFound
     QuestionNotFound = 30
+    QuestionsNotFound = 31
 
 
 class AbstractError(Exception):
