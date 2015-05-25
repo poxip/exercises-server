@@ -28,7 +28,7 @@ class Question(restful.Resource):
 
         try:
             cur = g.db.execute(
-                'SELECT title, content FROM questions WHERE id=?', (question_id,)
+                'SELECT title, content, tags FROM questions WHERE id=?', (question_id,)
             )
         except sqlite3.Error as e:
             raise DatabaseError(
@@ -46,7 +46,8 @@ class Question(restful.Resource):
 
         return {
             'title': row[0],
-            'content': row[1]
+            'content': row[1],
+            'tags': row[2].split(',')
         }
 
 class CheckQuestionAnswer(restful.Resource):

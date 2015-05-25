@@ -3,6 +3,7 @@ from contextlib import closing
 
 from flask import Flask, g, jsonify
 from flask.ext import restful
+from flask.ext.cors import CORS
 
 from exercises.errorhandlers import AbstractError
 
